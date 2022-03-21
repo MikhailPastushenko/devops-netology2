@@ -1,77 +1,79 @@
-# Задание Инструменты Git
+**_4. С помощью базового файла конфигурации запустите Ubuntu 20.04 в VirtualBox посредством Vagrant:_**
 
-_**1. Найдите полный хеш и комментарий коммита, хеш которого начинается на aefea**_
+vagrant init
 
-git show aefea
+![img.png](img.png)
 
-Полный хэш aefead2207ef7e2aa5dc81a34aedf0cad4c32545
-Комментарий Update CHANGELOG.md
+vagrant up
 
-_**2.Какому тегу соответствует коммит 85024d3?**_
+![img_1.png](img_1.png)
 
-git show 85024d3
+**_5. Ознакомьтесь с графическим интерфейсом VirtualBox, посмотрите как выглядит виртуальная машина, которую создал для вас Vagrant, какие аппаратные ресурсы ей выделены. Какие ресурсы выделены по-умолчанию?_**
 
-tag: v0.12.23
+![img_2.png](img_2.png)
 
+**_6. Ознакомьтесь с возможностями конфигурации VirtualBox через Vagrantfile: документация. Как добавить оперативной памяти или ресурсов процессора виртуальной машине?_**
 
-**_3. Сколько родителей у коммита b8d720? Напишите их хеши_**
+![img_3.png](img_3.png)
 
-git show b8d720^
+**_7. Команда vagrant ssh из директории, в которой содержится Vagrantfile, позволит вам оказаться внутри виртуальной машины без каких-либо дополнительных настроек. Попрактикуйтесь в выполнении обсуждаемых команд в терминале Ubuntu.
+Ознакомиться с разделами man bash, почитать о настройках самого bash:_**
 
-1 родитель, хэш 56cd7859e05c36c06b56d013b55a252d0bb7e158
+![img_4.png](img_4.png)
 
+8**_. Ознакомиться с разделами man bash, почитать о настройках самого bash:
+какой переменной можно задать длину журнала history, и на какой строчке manual это описывается?_**
 
-**_4. Перечислите хеши и комментарии всех коммитов которые были сделаны между тегами v0.12.23 и v0.12.24._**
+HISTSIZE 
 
-git log --oneline v0.12.23..v0.12.24
+![img_5.png](img_5.png)
 
-33ff1c03b (tag: v0.12.24) v0.12.24
+**_что делает директива ignoreboth в bash?_**
 
-b14b74c49 [Website] vmc provider links
+Устанавливает флаги ignoredups и ignorespace
 
-3f235065b Update CHANGELOG.md
-
-6ae64e247 registry: Fix panic when server is unreachable
-
-5c619ca1b website: Remove links to the getting started guide's old location
-
-06275647e Update CHANGELOG.md
-
-d5f9411f5 command: Fix bug when using terraform login on Windows
-
-4b6d06cc5 Update CHANGELOG.md
-
-dd01a3507 Update CHANGELOG.md
-
-225466bc3 Cleanup after v0.12.23 release
-
-_**5. Найдите коммит в котором была создана функция func providerSource, ее определение в коде выглядит так func providerSource(...) (вместо троеточего перечислены аргументы).**_
-
-git grep 'providerSource('  - находим, что функция описана в файле provider_source.go
-
-git log -L:providerSource:provider_source.go --pretty=short
-
-commit 8c928e83589d90a031f811fae52a81be7153e82f     main: Consult local directories as potential mirrors of providers
+![img_6.png](img_6.png)
 
 
-_**6. Найдите все коммиты в которых была изменена функция globalPluginDirs**_
+**_9. В каких сценариях использования применимы скобки {} и на какой строчке man bash это описано?_**
 
-git grep globalPluginDirs - находим, что функция описана в файле plugins.go
+Для генерации набора строк, имён файлов 
 
-git log -L:globalPluginDirs:plugins.go
+![img_7.png](img_7.png)
 
-commit 78b12205587fe839f10d946ea3fdc06719decb05
 
-commit 52dbf94834cb970b510f2fba853a5b49ad9b1a46
+_**10. С учётом ответа на предыдущий вопрос, как создать однократным вызовом touch 100000 файлов? Получится ли аналогичным образом создать 300000? Если нет, то почему?**_
 
-commit 41ab0aef7a0fe030e84018973a64135b11abcd70
+touch file{1..100000}
 
-commit 66ebff90cdfaa6938f26f908c7ebad8d547fea17
+touch file{1..300000}
 
-commit 8364383c359a6b738a436d1b7745ccdce178df47 - создана в данном коммите
+![img_8.png](img_8.png)
 
-**_7. Кто автор функции synchronizedWriters?_**
+**_11. В man bash поищите по /\[\[. Что делает конструкция [[ -d /tmp ]]_**
 
-git log -SsynchronizedWriters --pretty=short
+Логическое выражение равное true, если директория /temp существует 
 
-Author: Martin Atkins <mart@degeneration.co.uk>
+![img_9.png](img_9.png)
+
+12. Основываясь на знаниях о просмотре текущих (например, PATH) и установке новых переменных; командах, которые мы рассматривали, добейтесь в выводе type -a bash в виртуальной машине наличия первым пунктом в списке:
+
+bash is /tmp/new_path_directory/bash
+
+bash is /usr/local/bin/bash
+
+bash is /bin/bash
+
+![img_10.png](img_10.png)
+
+
+**_13. Чем отличается планирование команд с помощью batch и at?_**
+
+at выполнит команду в заданное время, а batch - когда уровень загрузки будет ниже определённого
+
+
+_**14. Завершите работу виртуальной машины чтобы не расходовать ресурсы компьютера и/или батарею ноутбука**_
+
+vagrant halt
+
+![img_11.png](img_11.png)
