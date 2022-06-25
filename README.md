@@ -1,57 +1,221 @@
 
-## Домашнее задание к занятию 5.1 ##
+## Домашнее задание к занятию 5.2 ##
+
+### Задача 1. ###
+
+### Опишите своими словами основные преимущества применения на практике IaaC паттернов. ###
+
+Cтабильность всех сред/стендов (разработки, тестирования и промышленного внедрения) за счёт точного описания конфигураций этих сред, а также ускорение релиза продукта за счёт автоматизации на всех стадиях
+
+### Какой из принципов IaaC является основополагающим ? ###
+
+Основополагающим является идемпотентность, так как именно она лежит в основе стабильность всех сред
 
 
-### Задача 1. Опишите кратко, как вы поняли: в чем основное отличие полной (аппаратной) виртуализации, паравиртуализации и виртуализации на основе ОС ###
+### Задача 2 ###
 
-Аппаратная виртуализация полностью эмулирует работу всего аппаратного обеспечения для гостевых ОС, а при паравиртуализации гостевая ОС взаимодействует с аппаратными ресурсами не напрямую, а через некий встроенный API, который предназначен для повышения эффективности совместного использования аппаратных ресурсов несколькими гостевыми ОС. А при виртуализации на уровне ОС разделение  использования аппаратных ресурсов происходит не между разными экземплярами гостевых ОС, а между некими изолированными пространствами(контейнерами) внутри одной ОС. 
+### Чем Ansible выгодно отличается от других систем управление конфигурациями? ###
 
-_Отступление:_ Исходя из вышеописанного у меня возникли сомнения по поводу содержимо слайда 10 презентации. На нём полная аппаратная виртуализации приравнена к гипервизору 1 типа, а паравиртуализация к гипервизору 2 типа, хотя это вроде бы  не связанные напрямую вещи. Тип гипервизора определяется его установкой на голое железо или базовую ОС, а тип виртуализации определяется способом доступа гостевой ОС к аппаратным ресурсам (напрямую или через вcтроенный в неё API). 
+Тем что использует встроенную службу SSH, благодаря чему не требует установки дополнительных агентов, а также создания и развертывания дополнительной системы ключей
 
-Соответственно, возникает вопрос , что имеется ввиду в следующих вопросах, тип гипервизора или тип виртуализации. 
+### Какой, на ваш взгляд, метод работы систем конфигурации более надёжный push или pull? ###
 
-
-### Задача 2. Выберите один из вариантов использования организации физических серверов, в зависимости от условий использования. Опишите, почему вы выбрали к каждому целевому использованию такую организацию ###
-
-
-1) _Высоконагруженная база данных, чувствительная к отказу_ - аппаратная виртуализация, так как позволяет объединять гипервизоры в отказоустойчивый кластер (vSphere например)
-
-2) _Различные web-приложения_ - виртуализация уровня ОС. Позволит изолировать одно web-приложение от другого, а также масштабировать web-приложения в зависимости от нагрузки на них. Без дополнительных расходов на создание отдельных экземпляров ОС.
-
-3) _Windows системы для использования бухгалтерским отделом_ - паравиртуализация на основе Microsoft Hyper-V, так как удобнее всего поднять нужное количество ВМ с Windows
-
-4) _Системы, выполняющие высокопроизводительные расчеты на GPU_ -  аппаратная виртуализация как наиболее производительный тип 
-
-### Задача 3. Выберите подходящую систему управления виртуализацией для предложенного сценария. Детально опишите ваш выбор.
-
-_Сценарии:_
-
-_1) 100 виртуальных машин на базе Linux и Windows, общие задачи, нет особых требований. Преимущественно Windows based инфраструктура, требуется реализация программных балансировщиков нагрузки, репликации данных и автоматизированного механизма создания резервных копий._
-
-VMWare vSphere, так как это наиболее продвинутое на рынке решение, отвечающее всем указанным в условии требованиям
-
-_2) Требуется наиболее производительное бесплатное open source решение для виртуализации небольшой (20-30 серверов) инфраструктуры на базе Linux и Windows виртуальных машин._
-
-XenSerer, так это наиболее продвинутое open source решение, подходящее и для windows и для Linux. Использование технологии паравиртуализации позволяет увеличить производительность Linux-систем
-
-_3) Необходимо бесплатное, максимально совместимое и производительное решение для виртуализации Windows инфраструктуры._
-
-Microsoft Hyper-V Server, так как  он бесплатен и максимально заточен под Windows инфраструктуру
-
-_4) Необходимо рабочее окружение для тестирования программного продукта на нескольких дистрибутивах Linux._
-
-KVM, так как это уже готовое встроенное решение для виртуализации в среде Linux
+Более надёжным является метод push так как исключает вероятность перегрузки сервера большим количеством pull-запросов
 
 
+### Задача 3 Установить на личный компьютер: ###
+### VirtualBox ###
+### Vagrant ###
+### Ansible ###
+### Приложить вывод команд установленных версий каждой из программ, оформленный в markdown ##
 
-### Задача 4. Опишите возможные проблемы и недостатки гетерогенной среды виртуализации (использования нескольких систем управления виртуализацией одновременно) и что необходимо сделать для минимизации этих рисков и проблем. ###
-  
-1. Необходимость учитывать разные требования к аппаратным ресурсам (например, поддержку гипервизоров). Для снижения рисков требуется детальное планирование развёртывания, возможно с привлечением сертифицированных IT-интеграторов
 
-2. Необходимость иметь компетенции сотрудников по нескольким системам. Для снижения рисков требуется проработка рабочих процессов компании (workflow) и возможно даже разделение сопровождения разных систем разными подразделениями/группами в компании.
-	
-**_Если бы у вас был выбор, то создавали бы вы гетерогенную среду или нет? Мотивируйте ваш ответ примерами._**
+VirtualBox и Vagrant были установлены ранее при выполнении предыдущих модулей, а установка ansible на Window невозможна, о чём написано на официальном сайте
 
-Использовал бы в случае организации облачной инфраструктуры, для предоставления клиенту возможности выбора платформы виртуализации его ресурсов. Например, сейчас так сделано в Сбере: существует облачный портал, на котором все подразделения, заказывая вычислительные ресурсы как услугу, могут выбрать Vmware или  OpenStack, в зависимости от своих потребностей. 
+![img.png](img.png)
 
-Если разворачивать среду чисто для виртуализации серверной инфраструктуры компании, то не использовал бы гетерогенную, т.к. это заметно увеличивает трудозатраты. Выбрал бы на этапе проектирования какую-то одну наиболее отвечающую требованиям систему виртуализации. Например, в РЖД (моё предыдущее место работы) силами IT-интегратора была развёрнута единая система виртуализации на базе VMWare vShere
+Соответственно, при запуске ВМ получаем ошибку _Windows is not officially supported the Ansible Control Machine_
+
+![img_1.png](img_1.png)
+
+Поэтому  попробовал развернуть виртуальную машину с Ubuntu и установить всё на неё 
+
+VirtualBox на ubuntu, к сожалению, установился только из официальнго магазина через GUI. Поэтому вывод команд приложить не могу
+
+Vagrant устанавливал согласно данному руководству 
+
+![img_2.png](img_2.png)
+
+Вывод очень длинный, поэтому прикладываю скриншот последнего экрана, на нём видна установка пакета vagrant
+
+![img_3.png](img_3.png)
+
+Проверка установки vagrant
+
+![img_4.png](img_4.png)
+
+Установка ansible:
+
+![img_5.png](img_5.png)
+
+Полный вывод:
+
+```
+mikhail@Ubuntu1:~/Desktop$ sudo apt install ansible
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  chromium-codecs-ffmpeg-extra gstreamer1.0-vaapi libgstreamer-plugins-bad1.0-0
+  libva-wayland2
+Use 'sudo apt autoremove' to remove them.
+The following additional packages will be installed:
+  ieee-data python-babel-localedata python3-argcomplete python3-babel python3-distutils
+  python3-dnspython python3-jinja2 python3-jmespath python3-kerberos python3-libcloud
+  python3-netaddr python3-ntlm-auth python3-packaging python3-pycryptodome
+  python3-requests-kerberos python3-requests-ntlm python3-requests-toolbelt python3-selinux
+  python3-simplejson python3-winrm python3-xmltodict
+Suggested packages:
+  cowsay sshpass python3-sniffio python3-trio python-jinja2-doc ipython3 python-netaddr-docs
+The following NEW packages will be installed:
+  ansible ieee-data python-babel-localedata python3-argcomplete python3-babel
+  python3-distutils python3-dnspython python3-jinja2 python3-jmespath python3-kerberos
+  python3-libcloud python3-netaddr python3-ntlm-auth python3-packaging python3-pycryptodome
+  python3-requests-kerberos python3-requests-ntlm python3-requests-toolbelt python3-selinux
+  python3-simplejson python3-winrm python3-xmltodict
+0 upgraded, 22 newly installed, 0 to remove and 116 not upgraded.
+Need to get 28,2 MB of archives.
+After this operation, 272 MB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python-babel-localedata all 2.8.0+dfsg.1-7 [4 982 kB]
+Get:2 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-babel all 2.8.0+dfsg.1-7 [85,1 kB]
+Get:3 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-jinja2 all 3.0.3-1 [108 kB]
+Get:4 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-packaging all 21.3-1 [30,7 kB]
+Get:5 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-pycryptodome amd64 3.11.0+dfsg1-3build1 [1 027 kB]
+Get:6 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-distutils all 3.10.4-0ubuntu1 [138 kB]
+Get:7 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-dnspython all 2.1.0-1ubuntu1 [123 kB]
+Get:8 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 ieee-data all 20210605.1 [1 887 kB]
+Get:9 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-netaddr all 0.8.0-2 [309 kB]
+Get:10 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 ansible all 2.10.7+merged+base+2.10.8+dfsg-1 [17,5 MB]
+Get:11 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-argcomplete all 1.8.1-1.5 [27,2 kB]
+Get:12 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-jmespath all 0.10.0-1 [21,7 kB]
+Get:13 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-kerberos amd64 1.1.14-3.1build5 [23,0 kB]
+Get:14 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-simplejson amd64 3.17.6-1build1 [54,7 kB]
+Get:15 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-libcloud all 3.2.0-2 [1 554 kB]
+Get:16 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-ntlm-auth all 1.4.0-1 [20,4 kB]
+Get:17 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-requests-kerberos all 0.12.0-2 [11,9 kB]
+Get:18 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-requests-ntlm all 1.1.0-1.1 [6 160 B]
+Get:19 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-requests-toolbelt all 0.9.1-1 [38,0 kB]
+Get:20 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-selinux amd64 3.3-1build2 [159 kB]
+Get:21 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-xmltodict all 0.12.0-2 [12,6 kB]
+Get:22 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-winrm all 0.3.0-2 [21,7 kB]
+Fetched 28,2 MB in 12s (2 332 kB/s)                                                           
+Selecting previously unselected package python-babel-localedata.
+(Reading database ... 219430 files and directories currently installed.)
+Preparing to unpack .../00-python-babel-localedata_2.8.0+dfsg.1-7_all.deb ...
+Unpacking python-babel-localedata (2.8.0+dfsg.1-7) ...
+Selecting previously unselected package python3-babel.
+Preparing to unpack .../01-python3-babel_2.8.0+dfsg.1-7_all.deb ...
+Unpacking python3-babel (2.8.0+dfsg.1-7) ...
+Selecting previously unselected package python3-jinja2.
+Preparing to unpack .../02-python3-jinja2_3.0.3-1_all.deb ...
+Unpacking python3-jinja2 (3.0.3-1) ...
+Selecting previously unselected package python3-packaging.
+Preparing to unpack .../03-python3-packaging_21.3-1_all.deb ...
+Unpacking python3-packaging (21.3-1) ...
+Selecting previously unselected package python3-pycryptodome.
+Preparing to unpack .../04-python3-pycryptodome_3.11.0+dfsg1-3build1_amd64.deb ...
+Unpacking python3-pycryptodome (3.11.0+dfsg1-3build1) ...
+Selecting previously unselected package python3-distutils.
+Preparing to unpack .../05-python3-distutils_3.10.4-0ubuntu1_all.deb ...
+Unpacking python3-distutils (3.10.4-0ubuntu1) ...
+Selecting previously unselected package python3-dnspython.
+Preparing to unpack .../06-python3-dnspython_2.1.0-1ubuntu1_all.deb ...
+Unpacking python3-dnspython (2.1.0-1ubuntu1) ...
+Selecting previously unselected package ieee-data.
+Preparing to unpack .../07-ieee-data_20210605.1_all.deb ...
+Unpacking ieee-data (20210605.1) ...
+Selecting previously unselected package python3-netaddr.
+Preparing to unpack .../08-python3-netaddr_0.8.0-2_all.deb ...
+Unpacking python3-netaddr (0.8.0-2) ...
+Selecting previously unselected package ansible.
+Preparing to unpack .../09-ansible_2.10.7+merged+base+2.10.8+dfsg-1_all.deb ...
+Unpacking ansible (2.10.7+merged+base+2.10.8+dfsg-1) ...
+Selecting previously unselected package python3-argcomplete.
+Preparing to unpack .../10-python3-argcomplete_1.8.1-1.5_all.deb ...
+Unpacking python3-argcomplete (1.8.1-1.5) ...
+Selecting previously unselected package python3-jmespath.
+Preparing to unpack .../11-python3-jmespath_0.10.0-1_all.deb ...
+Unpacking python3-jmespath (0.10.0-1) ...
+Selecting previously unselected package python3-kerberos.
+Preparing to unpack .../12-python3-kerberos_1.1.14-3.1build5_amd64.deb ...
+Unpacking python3-kerberos (1.1.14-3.1build5) ...
+Selecting previously unselected package python3-simplejson.
+Preparing to unpack .../13-python3-simplejson_3.17.6-1build1_amd64.deb ...
+Unpacking python3-simplejson (3.17.6-1build1) ...
+Selecting previously unselected package python3-libcloud.
+Preparing to unpack .../14-python3-libcloud_3.2.0-2_all.deb ...
+Unpacking python3-libcloud (3.2.0-2) ...
+Selecting previously unselected package python3-ntlm-auth.
+Preparing to unpack .../15-python3-ntlm-auth_1.4.0-1_all.deb ...
+Unpacking python3-ntlm-auth (1.4.0-1) ...
+Selecting previously unselected package python3-requests-kerberos.
+Preparing to unpack .../16-python3-requests-kerberos_0.12.0-2_all.deb ...
+Unpacking python3-requests-kerberos (0.12.0-2) ...
+Selecting previously unselected package python3-requests-ntlm.
+Preparing to unpack .../17-python3-requests-ntlm_1.1.0-1.1_all.deb ...
+Unpacking python3-requests-ntlm (1.1.0-1.1) ...
+Selecting previously unselected package python3-requests-toolbelt.
+Preparing to unpack .../18-python3-requests-toolbelt_0.9.1-1_all.deb ...
+Unpacking python3-requests-toolbelt (0.9.1-1) ...
+Selecting previously unselected package python3-selinux.
+Preparing to unpack .../19-python3-selinux_3.3-1build2_amd64.deb ...
+Unpacking python3-selinux (3.3-1build2) ...
+Selecting previously unselected package python3-xmltodict.
+Preparing to unpack .../20-python3-xmltodict_0.12.0-2_all.deb ...
+Unpacking python3-xmltodict (0.12.0-2) ...
+Selecting previously unselected package python3-winrm.
+Preparing to unpack .../21-python3-winrm_0.3.0-2_all.deb ...
+Unpacking python3-winrm (0.3.0-2) ...
+Setting up python3-distutils (3.10.4-0ubuntu1) ...
+Setting up python3-requests-toolbelt (0.9.1-1) ...
+Setting up python3-ntlm-auth (1.4.0-1) ...
+Setting up python3-pycryptodome (3.11.0+dfsg1-3build1) ...
+Setting up python3-kerberos (1.1.14-3.1build5) ...
+Setting up python-babel-localedata (2.8.0+dfsg.1-7) ...
+Setting up python3-simplejson (3.17.6-1build1) ...
+Setting up python3-xmltodict (0.12.0-2) ...
+Setting up python3-packaging (21.3-1) ...
+Setting up python3-jmespath (0.10.0-1) ...
+Setting up python3-requests-kerberos (0.12.0-2) ...
+Setting up ieee-data (20210605.1) ...
+Setting up python3-dnspython (2.1.0-1ubuntu1) ...
+Setting up python3-selinux (3.3-1build2) ...
+Setting up python3-argcomplete (1.8.1-1.5) ...
+Setting up python3-requests-ntlm (1.1.0-1.1) ...
+Setting up python3-babel (2.8.0+dfsg.1-7) ...
+update-alternatives: using /usr/bin/pybabel-python3 to provide /usr/bin/pybabel (pybabel) in au
+to mode
+Setting up python3-libcloud (3.2.0-2) ...
+Setting up python3-jinja2 (3.0.3-1) ...
+Setting up python3-netaddr (0.8.0-2) ...
+Setting up python3-winrm (0.3.0-2) ...
+Setting up ansible (2.10.7+merged+base+2.10.8+dfsg-1) ...
+Processing triggers for man-db (2.10.2-1) ...
+```
+
+
+
+### Задача 4 (*) Воспроизвести практическую часть лекции самостоятельно. ###
+
+### Создать виртуальную машину. ###
+
+Копирование конфигурационных файлов и проверка статуса
+
+![img_6.png](img_6.png)
+
+К сожалению, внутри ВМ не получилось развернуть другую ВМ - при запуске получаем ошибку
+
+![img_7.png](img_7.png)
+
+
