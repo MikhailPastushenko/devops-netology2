@@ -1,223 +1,48 @@
 
-## Домашнее задание к занятию 5.2 ##
+## Домашнее задание к занятию 5.3 ##
 
 ### Задача 1. ###
 
-#### Опишите своими словами основные преимущества применения на практике IaaC паттернов. ####
+#### Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo. ####
 
-Cтабильность всех сред/стендов (разработки, тестирования и промышленного внедрения) за счёт точного описания конфигураций этих сред, а также ускорение релиза продукта за счёт автоматизации на всех стадиях
-
-#### Какой из принципов IaaC является основополагающим ? ####
-
-Основополагающим является идемпотентность, так как именно она лежит в основе стабильность всех сред
+https://hub.docker.com/repository/docker/mikhailpastushenko/repo1
 
 
 ### Задача 2. ###
 
-#### Чем Ansible выгодно отличается от других систем управление конфигурациями? ####
+#### Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или лучше подойдет виртуальная машина, физическая машина? Может быть возможны разные варианты? ####
 
-Тем что использует встроенную службу SSH, благодаря чему не требует установки дополнительных агентов, а также создания и развертывания дополнительной системы ключей
+1) _Высоконагруженное монолитное java веб-приложение_ - лучше подойдёт отдельная вируальная машина;
 
-#### Какой, на ваш взгляд, метод работы систем конфигурации более надёжный push или pull? ####
+2) _Nodejs веб-приложение_ - подойдёт контейнер. Здесь, как и в последующих сценариях, многое зависит от требований приложения к RAM и CPU, так как согласно подходу CloudNative микросервисы должны быть микро- и многие системы оркестрации вообще не разрешают поднимать контейнеры c RAM > 8 Гб, например  ;
 
-Более надёжным является метод push так как исключает вероятность перегрузки сервера большим количеством pull-запросов
+3) _Мобильное приложение c версиями для Android и iOS_ - подойдут контейнеры, можно разнести код/функционал разных версий по разным контейнерам
 
+4) _Шина данных на базе Apache Kafka_ - для высоконагруженных промышленных сред лучше использовать кластер из виртуальных машин, а для ненагруженных сред разработки и тестирования можно использовать контейнеры (мы сейчас так используем) ;
 
-### Задача 3.
+5) _Elasticsearch кластер для реализации логирования продуктивного веб-приложения_ - три ноды elasticsearch, два logstash и две ноды kibana - для продуктивного кластера лучше использовать отдельные ВМ;
 
-#### Установить на личный компьютер: ####
-#### VirtualBox ####
-#### Vagrant ####
-#### Ansible ####
-#### Приложить вывод команд установленных версий каждой из программ, оформленный в markdown ####
+6) _Мониторинг-стек на базе Prometheus и Grafana_ - лучше использовать контейнеры. (У нас в репозитории компании уже имеются готовые образы контейнеров Prometheus и Grafana, которые разработчики используют  в своих проектах);
 
+7) _MongoDB, как основное хранилище данных для java-приложения_ - виртуальная машина. Базы данных не являются stateless-объектами, поэтому хуже подходят для контейнеризации, тем более как основное хранилище  ;
 
-VirtualBox и Vagrant были установлены ранее при выполнении предыдущих модулей, а установка ansible на Window невозможна, о чём написано на официальном сайте
+8) _Gitlab сервер для реализации CI/CD процессов и приватный (закрытый) Docker Registry_  - контейнеры не подходят для хранения файловой информации. Больше подходят кластеры из физических серверов.
 
-![img.png](img.png)
+### Задача 3. ###
 
-Соответственно, при запуске ВМ получаем ошибку _Windows is not officially supported the Ansible Control Machine_
-
-![img_1.png](img_1.png)
-
-Поэтому  попробовал развернуть виртуальную машину с Ubuntu и установить всё на неё 
-
-VirtualBox на ubuntu, к сожалению, установился только из официальнго магазина через GUI. Поэтому вывод команд приложить не могу
-
-Vagrant устанавливал согласно данному руководству 
+#### Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера ####
+#### Запустите второй контейнер из образа debian в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера; ####
 
 ![img_2.png](img_2.png)
 
-Вывод очень длинный, поэтому прикладываю скриншот последнего экрана, на нём видна установка пакета vagrant
-
+#### Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data ####
 ![img_3.png](img_3.png)
 
-Проверка установки vagrant
+#### Добавьте еще один файл в папку /data на хостовой машине ####
 
 ![img_4.png](img_4.png)
 
-Установка ansible:
+#### Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера ####
 
 ![img_5.png](img_5.png)
-
-Полный вывод:
-
-```
-mikhail@Ubuntu1:~/Desktop$ sudo apt install ansible
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-The following packages were automatically installed and are no longer required:
-  chromium-codecs-ffmpeg-extra gstreamer1.0-vaapi libgstreamer-plugins-bad1.0-0
-  libva-wayland2
-Use 'sudo apt autoremove' to remove them.
-The following additional packages will be installed:
-  ieee-data python-babel-localedata python3-argcomplete python3-babel python3-distutils
-  python3-dnspython python3-jinja2 python3-jmespath python3-kerberos python3-libcloud
-  python3-netaddr python3-ntlm-auth python3-packaging python3-pycryptodome
-  python3-requests-kerberos python3-requests-ntlm python3-requests-toolbelt python3-selinux
-  python3-simplejson python3-winrm python3-xmltodict
-Suggested packages:
-  cowsay sshpass python3-sniffio python3-trio python-jinja2-doc ipython3 python-netaddr-docs
-The following NEW packages will be installed:
-  ansible ieee-data python-babel-localedata python3-argcomplete python3-babel
-  python3-distutils python3-dnspython python3-jinja2 python3-jmespath python3-kerberos
-  python3-libcloud python3-netaddr python3-ntlm-auth python3-packaging python3-pycryptodome
-  python3-requests-kerberos python3-requests-ntlm python3-requests-toolbelt python3-selinux
-  python3-simplejson python3-winrm python3-xmltodict
-0 upgraded, 22 newly installed, 0 to remove and 116 not upgraded.
-Need to get 28,2 MB of archives.
-After this operation, 272 MB of additional disk space will be used.
-Do you want to continue? [Y/n] y
-Get:1 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python-babel-localedata all 2.8.0+dfsg.1-7 [4 982 kB]
-Get:2 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-babel all 2.8.0+dfsg.1-7 [85,1 kB]
-Get:3 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-jinja2 all 3.0.3-1 [108 kB]
-Get:4 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-packaging all 21.3-1 [30,7 kB]
-Get:5 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-pycryptodome amd64 3.11.0+dfsg1-3build1 [1 027 kB]
-Get:6 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-distutils all 3.10.4-0ubuntu1 [138 kB]
-Get:7 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-dnspython all 2.1.0-1ubuntu1 [123 kB]
-Get:8 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 ieee-data all 20210605.1 [1 887 kB]
-Get:9 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-netaddr all 0.8.0-2 [309 kB]
-Get:10 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 ansible all 2.10.7+merged+base+2.10.8+dfsg-1 [17,5 MB]
-Get:11 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-argcomplete all 1.8.1-1.5 [27,2 kB]
-Get:12 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-jmespath all 0.10.0-1 [21,7 kB]
-Get:13 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-kerberos amd64 1.1.14-3.1build5 [23,0 kB]
-Get:14 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-simplejson amd64 3.17.6-1build1 [54,7 kB]
-Get:15 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-libcloud all 3.2.0-2 [1 554 kB]
-Get:16 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-ntlm-auth all 1.4.0-1 [20,4 kB]
-Get:17 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-requests-kerberos all 0.12.0-2 [11,9 kB]
-Get:18 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-requests-ntlm all 1.1.0-1.1 [6 160 B]
-Get:19 http://ru.archive.ubuntu.com/ubuntu jammy/main amd64 python3-requests-toolbelt all 0.9.1-1 [38,0 kB]
-Get:20 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-selinux amd64 3.3-1build2 [159 kB]
-Get:21 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-xmltodict all 0.12.0-2 [12,6 kB]
-Get:22 http://ru.archive.ubuntu.com/ubuntu jammy/universe amd64 python3-winrm all 0.3.0-2 [21,7 kB]
-Fetched 28,2 MB in 12s (2 332 kB/s)                                                           
-Selecting previously unselected package python-babel-localedata.
-(Reading database ... 219430 files and directories currently installed.)
-Preparing to unpack .../00-python-babel-localedata_2.8.0+dfsg.1-7_all.deb ...
-Unpacking python-babel-localedata (2.8.0+dfsg.1-7) ...
-Selecting previously unselected package python3-babel.
-Preparing to unpack .../01-python3-babel_2.8.0+dfsg.1-7_all.deb ...
-Unpacking python3-babel (2.8.0+dfsg.1-7) ...
-Selecting previously unselected package python3-jinja2.
-Preparing to unpack .../02-python3-jinja2_3.0.3-1_all.deb ...
-Unpacking python3-jinja2 (3.0.3-1) ...
-Selecting previously unselected package python3-packaging.
-Preparing to unpack .../03-python3-packaging_21.3-1_all.deb ...
-Unpacking python3-packaging (21.3-1) ...
-Selecting previously unselected package python3-pycryptodome.
-Preparing to unpack .../04-python3-pycryptodome_3.11.0+dfsg1-3build1_amd64.deb ...
-Unpacking python3-pycryptodome (3.11.0+dfsg1-3build1) ...
-Selecting previously unselected package python3-distutils.
-Preparing to unpack .../05-python3-distutils_3.10.4-0ubuntu1_all.deb ...
-Unpacking python3-distutils (3.10.4-0ubuntu1) ...
-Selecting previously unselected package python3-dnspython.
-Preparing to unpack .../06-python3-dnspython_2.1.0-1ubuntu1_all.deb ...
-Unpacking python3-dnspython (2.1.0-1ubuntu1) ...
-Selecting previously unselected package ieee-data.
-Preparing to unpack .../07-ieee-data_20210605.1_all.deb ...
-Unpacking ieee-data (20210605.1) ...
-Selecting previously unselected package python3-netaddr.
-Preparing to unpack .../08-python3-netaddr_0.8.0-2_all.deb ...
-Unpacking python3-netaddr (0.8.0-2) ...
-Selecting previously unselected package ansible.
-Preparing to unpack .../09-ansible_2.10.7+merged+base+2.10.8+dfsg-1_all.deb ...
-Unpacking ansible (2.10.7+merged+base+2.10.8+dfsg-1) ...
-Selecting previously unselected package python3-argcomplete.
-Preparing to unpack .../10-python3-argcomplete_1.8.1-1.5_all.deb ...
-Unpacking python3-argcomplete (1.8.1-1.5) ...
-Selecting previously unselected package python3-jmespath.
-Preparing to unpack .../11-python3-jmespath_0.10.0-1_all.deb ...
-Unpacking python3-jmespath (0.10.0-1) ...
-Selecting previously unselected package python3-kerberos.
-Preparing to unpack .../12-python3-kerberos_1.1.14-3.1build5_amd64.deb ...
-Unpacking python3-kerberos (1.1.14-3.1build5) ...
-Selecting previously unselected package python3-simplejson.
-Preparing to unpack .../13-python3-simplejson_3.17.6-1build1_amd64.deb ...
-Unpacking python3-simplejson (3.17.6-1build1) ...
-Selecting previously unselected package python3-libcloud.
-Preparing to unpack .../14-python3-libcloud_3.2.0-2_all.deb ...
-Unpacking python3-libcloud (3.2.0-2) ...
-Selecting previously unselected package python3-ntlm-auth.
-Preparing to unpack .../15-python3-ntlm-auth_1.4.0-1_all.deb ...
-Unpacking python3-ntlm-auth (1.4.0-1) ...
-Selecting previously unselected package python3-requests-kerberos.
-Preparing to unpack .../16-python3-requests-kerberos_0.12.0-2_all.deb ...
-Unpacking python3-requests-kerberos (0.12.0-2) ...
-Selecting previously unselected package python3-requests-ntlm.
-Preparing to unpack .../17-python3-requests-ntlm_1.1.0-1.1_all.deb ...
-Unpacking python3-requests-ntlm (1.1.0-1.1) ...
-Selecting previously unselected package python3-requests-toolbelt.
-Preparing to unpack .../18-python3-requests-toolbelt_0.9.1-1_all.deb ...
-Unpacking python3-requests-toolbelt (0.9.1-1) ...
-Selecting previously unselected package python3-selinux.
-Preparing to unpack .../19-python3-selinux_3.3-1build2_amd64.deb ...
-Unpacking python3-selinux (3.3-1build2) ...
-Selecting previously unselected package python3-xmltodict.
-Preparing to unpack .../20-python3-xmltodict_0.12.0-2_all.deb ...
-Unpacking python3-xmltodict (0.12.0-2) ...
-Selecting previously unselected package python3-winrm.
-Preparing to unpack .../21-python3-winrm_0.3.0-2_all.deb ...
-Unpacking python3-winrm (0.3.0-2) ...
-Setting up python3-distutils (3.10.4-0ubuntu1) ...
-Setting up python3-requests-toolbelt (0.9.1-1) ...
-Setting up python3-ntlm-auth (1.4.0-1) ...
-Setting up python3-pycryptodome (3.11.0+dfsg1-3build1) ...
-Setting up python3-kerberos (1.1.14-3.1build5) ...
-Setting up python-babel-localedata (2.8.0+dfsg.1-7) ...
-Setting up python3-simplejson (3.17.6-1build1) ...
-Setting up python3-xmltodict (0.12.0-2) ...
-Setting up python3-packaging (21.3-1) ...
-Setting up python3-jmespath (0.10.0-1) ...
-Setting up python3-requests-kerberos (0.12.0-2) ...
-Setting up ieee-data (20210605.1) ...
-Setting up python3-dnspython (2.1.0-1ubuntu1) ...
-Setting up python3-selinux (3.3-1build2) ...
-Setting up python3-argcomplete (1.8.1-1.5) ...
-Setting up python3-requests-ntlm (1.1.0-1.1) ...
-Setting up python3-babel (2.8.0+dfsg.1-7) ...
-update-alternatives: using /usr/bin/pybabel-python3 to provide /usr/bin/pybabel (pybabel) in au
-to mode
-Setting up python3-libcloud (3.2.0-2) ...
-Setting up python3-jinja2 (3.0.3-1) ...
-Setting up python3-netaddr (0.8.0-2) ...
-Setting up python3-winrm (0.3.0-2) ...
-Setting up ansible (2.10.7+merged+base+2.10.8+dfsg-1) ...
-Processing triggers for man-db (2.10.2-1) ...
-```
-
-
-
-### Задача 4 (*) Воспроизвести практическую часть лекции самостоятельно. ###
-
-#### Создать виртуальную машину. ####
-
-Копирование конфигурационных файлов и проверка статуса
-
-![img_6.png](img_6.png)
-
-К сожалению, внутри ВМ не получилось развернуть другую ВМ - при запуске получаем ошибку
-
-![img_7.png](img_7.png)
-
 
