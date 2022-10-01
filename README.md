@@ -1,16 +1,33 @@
 
-## Домашнее задание к занятию "7.3." ##
+## Домашнее задание к занятию "7.3.Основы и принцип работы Терраформ" ##
 
-###  ###
-1. Выполните terraform init
-   2_1
-2. Создайте два воркспейса stage и prod
-   2_2
-3. В уже созданный aws_instance добавьте зависимость типа инстанса от вокспейса, что бы в разных ворскспейсах использовались разные instance_type
-4. Добавим count. Для stage должен создаться один экземпляр ec2, а для prod два.
+Делаю вариант с ЯндексОблаком
+
+### Задача 2. Инициализируем проект и создаем воркспейсы ###
+
+#### 1. Выполните terraform init ####
+
+   ![img_2.png](img_2.png)
+
+#### 2. Создайте два воркспейса stage и prod ####
+   
+![img_3.png](img_3.png)
 
 
-2_3
+#### 3. В уже созданный aws_instance добавьте зависимость типа инстанса от вокспейса, что бы в разных ворскспейсах использовались разные instance_type ####
+
+
+Так как работаю не с AWS,а с ЯндексОблаком сделал не разные instance_type, а например разные типы образов.
+
+Добавил переменную для типа образа
+
+![img_1.png](img_1.png)
+
+и зависимость образа от workspace
+
+![img_4.png](img_4.png)
+
+Вывод команды terraform plan
 ```
 root@Ubuntu1:~/PycharmProjects/devops-netology2/terraform# terraform plan
 data.yandex_compute_image.image: Reading...
@@ -85,8 +102,17 @@ Terraform will perform the following actions:
 Plan: 1 to add, 0 to change, 0 to destroy.
 ```
 
-2_4
+#### 4. Добавим count. Для stage должен создаться один экземпляр ec2, а для prod два. ####
 
+Добавил переменную для количества инстансов
+
+![img_5.png](img_5.png)
+
+и зависимость количества инстансов от workspace
+
+![img_6.png](img_6.png)
+
+Вывод команды terraform plan
 ```
 root@Ubuntu1:~/PycharmProjects/devops-netology2/terraform# terraform workspace select prod
 Switched to workspace "prod".
@@ -222,10 +248,12 @@ Terraform will perform the following actions:
 Plan: 2 to add, 0 to change, 0 to destroy.
 ```
 
-5. Создайте рядом еще один aws_instance, но теперь определите их количество при помощи for_each, а не count
+#### 5. Создайте рядом еще один aws_instance, но теперь определите их количество при помощи for_each, а не count ####
 
-5_2_1
+![img_7.png](img_7.png)
 
+
+Вывод команды terraform apply
 ```
 root@Ubuntu1:~/PycharmProjects/devops-netology2/terraform# terraform apply
 data.yandex_compute_image.image: Reading...
@@ -379,3 +407,7 @@ yandex_compute_instance.VM_Netology["vm2"]: Creation complete after 48s [id=fhmg
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
+
+/+ скриншот из GUI 
+
+![img_9.png](img_9.png)
